@@ -1,11 +1,11 @@
 package control;
 
-import control.exceptions.ArquivoMalFormatadoException;
+import exceptions.MalformedFileException;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Map;
+import javax.swing.table.DefaultTableModel;
 
 public class HTMLValidator {
     private static final String[] SINGLETONS = {
@@ -13,76 +13,80 @@ public class HTMLValidator {
         "link", "param", "source", "!doctype"
     };
 
-    private PilhaListaEncadeada<String> pilha = new PilhaListaEncadeada<>();
-    private ListaContadorTag contador = new ListaContadorTag();
+    private LinkedListStack<String> stack = new LinkedListStack<>();
+    private TagCounterList counter = new TagCounterList();
 
-    private boolean ehSingleton(String tag) {
+    private boolean isSingleton(String tag) {
         for (String t : SINGLETONS) {
             if (t.equalsIgnoreCase(tag)) return true;
         }
         return false;
     }
 
-    private String extrairNomeTag(String tag) {
+    private String extractTagName(String tag) {
         tag = tag.replaceAll("<|>|/", "").trim();
-        String[] partes = tag.split("\\s+");
-        return partes[0].toLowerCase();
+        String[] parts = tag.split("\\s+");
+        return parts[0].toLowerCase();
     }
 
-    public boolean validarArquivo(File arquivo) throws IOException {
-        BufferedReader leitor = new BufferedReader(new FileReader(arquivo));
-        String linha;
-        int linhaAtual = 0;
+    public boolean validateFile(File file) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        String line;
+        int actualLine = 0;
 
-        while ((linha = leitor.readLine()) != null) {
-            linhaAtual++;
-            linha = linha.trim();
-            if (linha.isEmpty()) continue;
+        while ((line = reader.readLine()) != null) {
+            actualLine++;
+            line = line.trim();
+            if (line.isEmpty()) continue;
 
-            int inicio = 0;
-            while ((inicio = linha.indexOf("<", inicio)) != -1) {
-                int fim = linha.indexOf(">", inicio);
-                if (fim == -1) break;
+            int init = 0;
+            while ((init = line.indexOf("<", init)) != -1) {
+                int end = line.indexOf(">", init);
+                if (end == -1) break;
 
-                String tagCompleta = linha.substring(inicio, fim + 1);
-                String nomeTag = extrairNomeTag(tagCompleta);
-                boolean ehFechamento = tagCompleta.startsWith("</");
+                String completeTag = line.substring(init, end + 1);
+                String tagName = extractTagName(completeTag);
+                boolean isClose = completeTag.startsWith("</");
 
-                if (ehSingleton(nomeTag)) {
-                    contador.adicionarOuIncrementar(nomeTag);
-                } else if (ehFechamento) {
-                    if (pilha.estaVazia()) {
-                        leitor.close();
-                        throw new ArquivoMalFormatadoException("Erro na linha " + linhaAtual + ": Tag final inesperada: " + tagCompleta);
+                if (isSingleton(tagName)) {
+                    counter.addOrIncrement(tagName);
+                } else if (isClose) {
+                    if (stack.isEmpty()) {
+                        reader.close();
+                        throw new MalformedFileException("Erro na linha " + actualLine + ": Tag final inesperada: " + completeTag);
                     }
-                    String topo = pilha.pop();
-                    if (!topo.equalsIgnoreCase(nomeTag)) {
-                        leitor.close();
-                        throw new ArquivoMalFormatadoException("Erro na linha " + linhaAtual + ": Esperava </" + topo + ">, mas encontrou " + tagCompleta);
+                    String top = stack.pop();
+                    if (!top.equalsIgnoreCase(tagName)) {
+                        reader.close();
+                        throw new MalformedFileException("Erro na linha " + actualLine + ": Esperava </" + top + ">, mas encontrou " + completeTag);
                     }
                 } else {
-                    pilha.push(nomeTag);
-                    contador.adicionarOuIncrementar(nomeTag);
+                    stack.push(tagName);
+                    counter.addOrIncrement(tagName);
                 }
 
-                inicio = fim + 1;
+                init = end + 1;
             }
         }
+        
+        reader.close();
 
-        leitor.close();
-
-        if (!pilha.estaVazia()) {
+        if (!stack.isEmpty()) {
             StringBuilder sb = new StringBuilder("Erro: Faltam as seguintes tags de fechamento:");
-            while (!pilha.estaVazia()) {
-                sb.append("</" + pilha.pop() + ">");
+            while (!stack.isEmpty()) {
+                sb.append("</" + stack.pop() + ">");
             }
-            throw new ArquivoMalFormatadoException(sb.toString());
+            throw new MalformedFileException(sb.toString());
+        }
+        
+        if (counter.isEmpty()) {
+            throw new MalformedFileException("Não existem tags HTML neste arquivo.");
         }
 
         return true;
     }
-
-    public Map<String, Integer> imprimirContador() {
-        return contador.imprimir();
+    
+    public DefaultTableModel insertTableRows(DefaultTableModel tableModel) {
+        return counter.insertTableRows(tableModel);
     }
 }
