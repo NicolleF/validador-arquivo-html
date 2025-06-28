@@ -1,9 +1,11 @@
 package control;
 
+import control.exceptions.ArquivoMalFormatadoException;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Map;
 
 public class HTMLValidator {
     private static final String[] SINGLETONS = {
@@ -50,15 +52,13 @@ public class HTMLValidator {
                     contador.adicionarOuIncrementar(nomeTag);
                 } else if (ehFechamento) {
                     if (pilha.estaVazia()) {
-                        System.out.println("Erro na linha " + linhaAtual + ": Tag final inesperada: " + tagCompleta);
                         leitor.close();
-                        return false;
+                        throw new ArquivoMalFormatadoException("Erro na linha " + linhaAtual + ": Tag final inesperada: " + tagCompleta);
                     }
                     String topo = pilha.pop();
                     if (!topo.equalsIgnoreCase(nomeTag)) {
-                        System.out.println("Erro na linha " + linhaAtual + ": Esperava </" + topo + ">, mas encontrou " + tagCompleta);
                         leitor.close();
-                        return false;
+                        throw new ArquivoMalFormatadoException("Erro na linha " + linhaAtual + ": Esperava </" + topo + ">, mas encontrou " + tagCompleta);
                     }
                 } else {
                     pilha.push(nomeTag);
@@ -72,17 +72,17 @@ public class HTMLValidator {
         leitor.close();
 
         if (!pilha.estaVazia()) {
-            System.out.println("Erro: Faltam as seguintes tags de fechamento:");
+            StringBuilder sb = new StringBuilder("Erro: Faltam as seguintes tags de fechamento:");
             while (!pilha.estaVazia()) {
-                System.out.println("</" + pilha.pop() + ">");
+                sb.append("</" + pilha.pop() + ">");
             }
-            return false;
+            throw new ArquivoMalFormatadoException(sb.toString());
         }
 
         return true;
     }
 
-    public void imprimirContador() {
-        contador.imprimir();
+    public Map<String, Integer> imprimirContador() {
+        return contador.imprimir();
     }
 }

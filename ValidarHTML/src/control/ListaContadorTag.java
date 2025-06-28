@@ -1,5 +1,7 @@
 package control;
 
+import java.util.HashMap;
+import java.util.Map;
 import model.ContadorTag;
 import model.NoLista;
 
@@ -36,12 +38,17 @@ public class ListaContadorTag {
         }
     }
 
-    public void imprimir() {
+    public Map<String, Integer> imprimir() {
+        Map<String, Integer> resultTags = new HashMap<>();
+//        StringBuilder sb = new StringBuilder();
         ordenar();
         NoLista<ContadorTag> atual = lista.getPrimeiro();
         while (atual != null) {
-            System.out.println(atual.getInfo());
+            resultTags.put(atual.getInfo().getNome(), atual.getInfo().getContagem());
+//            sb.append(atual.getInfo()).append("\n");
             atual = atual.getProximo();
         }
+        
+        return resultTags;
     }
 }
