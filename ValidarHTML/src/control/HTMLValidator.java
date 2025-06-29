@@ -42,7 +42,10 @@ public class HTMLValidator {
             int init = 0;
             while ((init = line.indexOf("<", init)) != -1) {
                 int end = line.indexOf(">", init);
-                if (end == -1) break;
+                if (end == -1){
+                    reader.close();
+                    throw new MalformedFileException("Erro na linha " + actualLine + ": Tag inicio < sem fechamento");
+                }
 
                 String completeTag = line.substring(init, end + 1);
                 String tagName = extractTagName(completeTag);

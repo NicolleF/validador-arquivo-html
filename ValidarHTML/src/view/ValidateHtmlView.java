@@ -272,16 +272,16 @@ public class ValidateHtmlView extends javax.swing.JFrame {
     private void jBtnAnalyzeHtmlMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jBtnAnalyzeHtmlMouseClicked
         // TODO add your handling code here:
         jPanelResults.setVisible(true);
-        HTMLValidator validador = new HTMLValidator();
-        File arquivo = new File(jLabelFilePath.getText());
+        HTMLValidator validator = new HTMLValidator();
+        File file = new File(jLabelFilePath.getText());
 
         try {
-            boolean valido = validador.validateFile(arquivo);
-            if (valido) {
+            boolean valid = validator.validateFile(file);
+            if (valid) {
                 jPanelTable.setVisible(true);
                 jResultText.setText("Arquivo HTML bem formatado!\n");
                 DefaultTableModel tableModel = createDefaultTableModel();
-                jTableTagsResult.setModel(validador.insertTableRows(tableModel));
+                jTableTagsResult.setModel(validator.insertTableRows(tableModel));
             }
         } catch (MalformedFileException e) {
             jPanelTable.setVisible(false);
