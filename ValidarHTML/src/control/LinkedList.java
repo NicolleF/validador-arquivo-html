@@ -10,7 +10,7 @@ public class LinkedList<T> {
         first = null;
     }
 
-    public NodeList getFirst() {
+    public NodeList<T> getFirst() {
         return first;
     }
 

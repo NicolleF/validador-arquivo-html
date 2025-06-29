@@ -22,7 +22,7 @@ public class NodeList<T> {
         return next;
     }
 
-    public void setNext(NodeList<T> proximo) {
-        this.next = proximo;
+    public void setNext(NodeList<T> next) {
+        this.next = next;
     }
 }
