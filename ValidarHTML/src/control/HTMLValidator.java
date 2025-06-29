@@ -77,7 +77,7 @@ public class HTMLValidator {
         if (!stack.isEmpty()) {
             StringBuilder sb = new StringBuilder("Erro: Faltam as seguintes tags de fechamento:");
             while (!stack.isEmpty()) {
-                sb.append("</" + stack.pop() + ">");
+                sb.append("</").append(stack.pop()).append(">");
             }
             throw new MalformedFileException(sb.toString());
         }

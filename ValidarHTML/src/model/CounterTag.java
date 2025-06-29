@@ -21,9 +21,4 @@ public class CounterTag {
     public void increment() {
         count++;
     }
-
-    @Override
-    public String toString() {
-        return name + " - " + count;
-    }
 }

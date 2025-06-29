@@ -4,8 +4,11 @@
  */
 package view;
 
+import java.awt.Component;
+import java.awt.Container;
 import java.io.File;
 import javax.swing.JFileChooser;
+import javax.swing.JTextField;
 
 /**
  *
@@ -25,7 +28,9 @@ public class FileChooserView extends javax.swing.JFrame {
         jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         jFileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Arquivos HTML e TXT", "html", "txt"));
         jFileChooser.setAcceptAllFileFilterUsed(false);
-
+        
+        disableTextField(jFileChooser);
+        
         jFileChooser.addActionListener(e -> {
             if (JFileChooser.APPROVE_SELECTION.equals(e.getActionCommand())) {
                 File selectedFile = jFileChooser.getSelectedFile();
@@ -35,6 +40,17 @@ public class FileChooserView extends javax.swing.JFrame {
                 dispose();
             }
         });
+    }
+    
+    private void disableTextField(Component component) {
+        if (component instanceof JTextField) {
+            ((JTextField) component).setEditable(false);
+            ((JTextField) component).setFocusable(false);
+        } else if (component instanceof Container) {
+            for (Component child : ((Container) component).getComponents()) {
+                disableTextField(child);
+            }
+        }
     }
 
     public static FileChooserView getFileChooserView() {
@@ -63,14 +79,14 @@ public class FileChooserView extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jFileChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addComponent(jFileChooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(0, 0, 0))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jFileChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jFileChooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();

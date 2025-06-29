@@ -47,18 +47,4 @@ public class LinkedListStack<T> implements IStack<T> {
     public void clear() {
         top = null;
     }
-
-//    @Override
-//    public String toString() {
-//        StringBuilder sb = new StringBuilder();
-//        NoLista<T> atual = topo;
-//        while (atual != null) {
-//            sb.append(atual.getInfo());
-//            if (atual.getProximo() != null) {
-//                sb.append(",");
-//            }
-//            atual = atual.getProximo();
-//        }
-//        return sb.toString();
-//    }
 }

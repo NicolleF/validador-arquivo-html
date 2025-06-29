@@ -18,18 +18,11 @@ public class ValidateHtmlView extends javax.swing.JFrame {
 
     private static ValidateHtmlView validarHtmlView;
 
-    /**
-     * Creates new form ValidarHtml
-     */
     public ValidateHtmlView() {
         initComponents();
         defaultConfigurations();
     }
 
-    /**
-     * Mostra a janela de adicionar uma nova entrada
-     *
-     */
     private void showFileChooserView() {
         FileChooserView fileChooserView = FileChooserView.getFileChooserView();
         fileChooserView.setVisible(true);
@@ -270,7 +263,6 @@ public class ValidateHtmlView extends javax.swing.JFrame {
     }//GEN-LAST:event_jBtnFileChooseMouseClicked
 
     private void jBtnAnalyzeHtmlMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jBtnAnalyzeHtmlMouseClicked
-        // TODO add your handling code here:
         jPanelResults.setVisible(true);
         HTMLValidator validator = new HTMLValidator();
         File file = new File(jLabelFilePath.getText());
