@@ -41,8 +41,10 @@ public class HTMLValidator {
 
             int init = 0;
             while ((init = line.indexOf("<", init)) != -1) {
+                int nextTag = line.indexOf("<", init + 1);
                 int end = line.indexOf(">", init);
-                if (end == -1){
+                
+                if ((end == -1) || (nextTag != -1 && nextTag < end)){
                     reader.close();
                     throw new MalformedFileException("Erro na linha " + actualLine + ": Tag inicio < sem fechamento");
                 }
