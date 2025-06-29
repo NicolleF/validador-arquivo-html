@@ -5,8 +5,8 @@ public class CounterTag {
     private String name;
     private int count;
 
-    public CounterTag(String nome) {
-        this.name = nome.toLowerCase();
+    public CounterTag(String name) {
+        this.name = name.toLowerCase();
         this.count = 1;
     }
 
