@@ -2,19 +2,29 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package view;
+package init;
+
+import view.ValidateHtmlView;
 
 /**
  *
- * @author Christian
+ * @author Nicolle
  */
-public class ValidarHtml extends javax.swing.JFrame {
+public class AppInit extends javax.swing.JFrame {
+
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(AppInit.class.getName());
 
     /**
-     * Creates new form ValidarHtml
+     * Creates new form AppInit
      */
-    public ValidarHtml() {
+    public AppInit() {
         initComponents();
+        showValidarHtmlView();
+    }
+
+    private void showValidarHtmlView() {
+        ValidateHtmlView validarHtmlView = ValidateHtmlView.getValidarHtmlView();
+        validarHtmlView.setVisible(true);
     }
 
     /**
@@ -58,23 +68,13 @@ public class ValidarHtml extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ValidarHtml.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ValidarHtml.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ValidarHtml.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ValidarHtml.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
+            logger.log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ValidarHtml().setVisible(true);
-            }
-        });
+        new AppInit();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
